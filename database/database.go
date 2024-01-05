@@ -6,7 +6,7 @@ import (
 	"time"
 
 	"go.mongodb.org/mongo-driver/mongo"
-	"go.mongodb.org/mongo-driver/options"
+	"go.mongodb.org/mongo-driver/mongo/options"
 	"go.mongodb.org/mongo-driver/mongo/readpref"
 
 	"golang-review-phone/config"
@@ -33,6 +33,13 @@ func InitDB() {
 	collection = database.Collection("reviews")
 
 	log.Println("Connected to MongoDB!")
+
+	// Defer a call to Disconnect after instantiating your client
+	defer func() {
+		if err := client.Disconnect(ctx); err != nil {
+			log.Fatal(err)
+		}
+	}()
 }
 
 func GetCollection(collectionName string) *mongo.Collection {
